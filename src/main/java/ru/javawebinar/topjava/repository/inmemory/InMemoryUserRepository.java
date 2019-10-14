@@ -3,21 +3,29 @@ package ru.javawebinar.topjava.repository.inmemory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static java.util.stream.Collectors.toList;
 
 @Repository
 public class InMemoryUserRepository implements UserRepository {
     private static final Logger log = LoggerFactory.getLogger(InMemoryUserRepository.class);
     private Map<Integer, User> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
+
+    {
+        save(new User(null, "Tor", "tor@gmail.com", "tor_password", Role.ROLE_USER));
+        save(new User(null, "SpiderMan", "spiderman@gmail.com", "spiderman_password", Role.ROLE_USER));
+        save(new User(null, "SpiderMan", "spiderman2@gmail.com", "spiderman2_password", Role.ROLE_USER));
+        save(new User(null, "IronMan", "ironman@gmail.com", "ironman_password", Role.ROLE_USER, Role.ROLE_ADMIN));
+    }
 
     @Override
     public boolean delete(int id) {
@@ -28,30 +36,30 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public User save(User user) {
         log.info("save {}", user);
-        if(user.isNew()){
+        if (user.isNew()) {
             user.setId(counter.incrementAndGet());
             repository.put(user.getId(), user);
             return user;
         }
 
-        return repository.computeIfPresent(user.getId(), (id, oldUser) ->user );
+        return repository.computeIfPresent(user.getId(), (id, oldUser) -> user);
     }
 
     @Override
     public User get(int id) {
         log.info("get {}", id);
-        return null;
+        return repository.get(id);
     }
 
     @Override
     public List<User> getAll() {
         log.info("getAll");
-        return Collections.emptyList();
+        return repository.values().stream().sorted().collect(toList());
     }
 
     @Override
     public User getByEmail(String email) {
         log.info("getByEmail {}", email);
-        return null;
+        return repository.values().stream().filter(u -> email.equals(u.getEmail())).findFirst().orElse(null);
     }
 }

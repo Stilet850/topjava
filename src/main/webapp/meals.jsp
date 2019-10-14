@@ -21,6 +21,36 @@
     <h3><a href="index.html">Home</a></h3>
     <hr/>
     <h2>Meals</h2>
+    <section>
+        <h4>Filter</h4>
+        <form method="post" action="meals?action=sorted">
+            <table>
+                <tr>
+                    <td>
+                        Start Date:
+                        <input type="date" name="startDate">
+                    </td>
+                    <td>
+                        End Date:
+                        <input type="date" name="endDate">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Start Time:
+                        <input type="time" name="startTime">
+                    </td>
+                    <td>
+                        End Time:
+                        <input type="time" name="endTime">
+                    </td>
+                </tr>
+                <tr>
+                    <button type="submit">Filter</button>
+                </tr>
+            </table>
+        </form>
+    </section>
     <a href="meals?action=create">Add Meal</a>
     <br><br>
     <table border="1" cellpadding="8" cellspacing="0">
