@@ -76,7 +76,6 @@ public class MealServlet extends HttpServlet {
             request.getRequestDispatcher("/meals.jsp").forward(request, response);
 
         } else {
-
             String id = request.getParameter("id");
             Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
                     LocalDateTime.parse(request.getParameter("dateTime")),
@@ -117,6 +116,12 @@ public class MealServlet extends HttpServlet {
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        appCtx.close();
     }
 
     private int getId(HttpServletRequest request) {

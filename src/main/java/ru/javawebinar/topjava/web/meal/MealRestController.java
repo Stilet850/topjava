@@ -40,17 +40,17 @@ public class MealRestController {
 
     public List<MealTo> sortBy(LocalTime start, LocalTime end, int id) {
         log.info("sortBy Time");
-        return MealsUtil.getFilteredTos(service.getAllByUserId(id), CALORIES,start,end);
+        return MealsUtil.getFilteredTos(service.getAllByUserId(id), CALORIES, start, end);
     }
 
     public List<MealTo> sortBy(LocalDate start, LocalDate end, int id) {
         log.info("sortBy Date");
-        return MealsUtil.getFilteredTos(service.getAllByUserId(id), CALORIES,start,end);
+        return MealsUtil.getFilteredTos(service.getAllByUserId(id), CALORIES, start, end);
     }
 
     public List<MealTo> sortBy(LocalDateTime first, LocalDateTime end, int id) {
         log.info("sortBy DateTime");
-        return MealsUtil.getFilteredTos(service.getAllByUserId(id), CALORIES,first,end);
+        return MealsUtil.getFilteredTos(service.getAllByUserId(id), CALORIES, first, end);
     }
 
     public Meal create(Meal meal) {
@@ -73,6 +73,4 @@ public class MealRestController {
         log.info("get {} with id={}", id);
         return service.get(id, userId);
     }
-
-
 }
