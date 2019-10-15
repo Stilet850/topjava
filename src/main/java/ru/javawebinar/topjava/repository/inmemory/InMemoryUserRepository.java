@@ -23,9 +23,9 @@ public class InMemoryUserRepository implements UserRepository {
 
     {
         save(new User(null, "Tor", "tor@gmail.com", "tor_password", Role.ROLE_USER));
-        save(new User(null, "SpiderMan", "spiderman@gmail.com", "spiderman_password", Role.ROLE_USER));
-        save(new User(null, "SpiderMan", "spiderman2@gmail.com", "spiderman2_password", Role.ROLE_USER));
-        save(new User(null, "IronMan", "ironman@gmail.com", "ironman_password", Role.ROLE_USER, Role.ROLE_ADMIN));
+        save(new User(null, "SpiderMan", "spiderman@gmail.com", "spiderman_password", Role.ROLE_USER, Role.ROLE_ADMIN));
+//        save(new User(null, "SpiderMan", "spiderman2@gmail.com", "spiderman2_password", Role.ROLE_USER));
+//        save(new User(null, "IronMan", "ironman@gmail.com", "ironman_password", Role.ROLE_USER, Role.ROLE_ADMIN));
     }
 
     @Override

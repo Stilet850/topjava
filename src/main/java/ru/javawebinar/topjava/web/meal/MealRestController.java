@@ -12,6 +12,7 @@ import ru.javawebinar.topjava.util.MealsUtil;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Collection;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
@@ -28,7 +29,7 @@ public class MealRestController {
         this.service = service;
     }
 
-    public List<MealTo> getAll() {
+    public Collection<MealTo> getAll() {
         log.info("getAll");
         return MealsUtil.getTos(service.getAll(), CALORIES);
     }

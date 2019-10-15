@@ -12,13 +12,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
 @Repository
 public class InMemoryMealRepository implements MealRepository {
-    public static final Comparator<Meal> MEAL_COMPARATOR = Comparator.comparing(Meal::getDateTime).reversed();
+    public static final Comparator<Meal> MEAL_COMPARATOR = comparing(Meal::getDateTime).reversed();
     private Map<Integer, Meal> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
 
@@ -49,12 +51,16 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getAll() {
-        return repository.values().stream().sorted(MEAL_COMPARATOR).collect(toList());
+        return getByCriteria(x->true);
     }
 
     @Override
     public List<Meal> getAllByUserId(Integer id) {
-        return repository.values().stream().filter(m->id.equals(m.getUserId())).sorted(MEAL_COMPARATOR).collect(toList());
+        return getByCriteria(m -> id.equals(m.getUserId()));
+    }
+
+    private List<Meal> getByCriteria(Predicate<Meal> predicate){
+        return repository.values().stream().filter(predicate).sorted(MEAL_COMPARATOR).collect(toList());
     }
 }
 
