@@ -1,21 +1,51 @@
 package ru.javawebinar.topjava.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.time.LocalDate;
 import java.util.List;
 
-public interface MealService {
-    Meal create(Meal meal);
+import static java.util.Collections.EMPTY_LIST;
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
-    void delete(int id, int userId) throws NotFoundException;
+@Service
+public class MealService {
 
-    Meal get(int id, int userId) throws NotFoundException;
+    private static final String meal_does_not_belong_to_the_user = "meal does not belong to the user";
+    private final MealRepository repository;
 
-    void update(Meal meal, int userId);
+    @Autowired
+    public MealService(MealRepository repository) {
+        this.repository = repository;
+    }
 
-    List<Meal> getAll();
+    public Meal create(Meal meal, int userId) {
+        return checkNotFoundWithId(repository.save(meal, userId), userId);
+    }
 
-    List<Meal> getAllByUserId(int id);
+    public void delete(int mealId, int userId) throws NotFoundException {
+        checkNotFoundWithId(repository.delete(mealId, userId), userId);
+    }
+
+    public Meal get(int mealId, int userId) throws NotFoundException {
+        return checkNotFoundWithId(repository.get(mealId, userId), userId);
+    }
+
+    public Meal update(Meal meal, int userId) {
+        return checkNotFoundWithId(repository.save(meal, userId), userId);
+    }
+
+    public List<Meal> getAllBy(int userId) {
+        List<Meal> list = repository.getAllBy(userId);
+        return list == null ? EMPTY_LIST : list;
+    }
+
+    public List<Meal> getAllBy(int userId, LocalDate startDate, LocalDate endDate) {
+        List<Meal> list = repository.getAllBy(userId, startDate, endDate);
+        return list == null ? EMPTY_LIST : list;
+    }
 }

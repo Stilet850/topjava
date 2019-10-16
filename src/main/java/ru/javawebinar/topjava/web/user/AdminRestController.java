@@ -3,15 +3,8 @@ package ru.javawebinar.topjava.web.user;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.User;
 
-import java.util.List;
-
 @Controller
 public class AdminRestController extends AbstractUserController {
-
-    @Override
-    public List<User> getAll() {
-        return super.getAll();
-    }
 
     @Override
     public User get(int id) {

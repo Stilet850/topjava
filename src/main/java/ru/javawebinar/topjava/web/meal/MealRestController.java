@@ -8,70 +8,60 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.util.ValidationUtil;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Collection;
 import java.util.List;
 
+import static ru.javawebinar.topjava.util.DateTimeUtil.getValue;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
+import static ru.javawebinar.topjava.web.SecurityUtil.authUserCaloriesPerDay;
+import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
 @Controller
 public class MealRestController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private final MealService service;
-    private final int CALORIES = MealsUtil.DEFAULT_CALORIES_PER_DAY;
 
     @Autowired
     public MealRestController(MealService service) {
         this.service = service;
     }
 
-    public Collection<MealTo> getAll() {
+    public List<MealTo> getAll() {
         log.info("getAll");
-        return MealsUtil.getTos(service.getAll(), CALORIES);
+        return MealsUtil.getTos(service.getAllBy(authUserId()), authUserCaloriesPerDay());
     }
 
-    public List<MealTo> getAllById(int id) {
-        log.info("getAllById");
-        return MealsUtil.getTos(service.getAllByUserId(id), CALORIES);
-    }
+    public List<MealTo> filterBy(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        log.info("filterBy startDate {}, endDate{}, startTime{}, endTime{} ", startDate, endDate, startTime, endTime);
 
-    public List<MealTo> sortBy(LocalTime start, LocalTime end, int id) {
-        log.info("sortBy Time");
-        return MealsUtil.getFilteredTos(service.getAllByUserId(id), CALORIES, start, end);
-    }
+        final List<Meal> filteredByDate = service.getAllBy(authUserId(), getValue(startDate, LocalDate.MIN), getValue(endDate, LocalDate.MAX));
 
-    public List<MealTo> sortBy(LocalDate start, LocalDate end, int id) {
-        log.info("sortBy Date");
-        return MealsUtil.getFilteredTos(service.getAllByUserId(id), CALORIES, start, end);
-    }
-
-    public List<MealTo> sortBy(LocalDateTime first, LocalDateTime end, int id) {
-        log.info("sortBy DateTime");
-        return MealsUtil.getFilteredTos(service.getAllByUserId(id), CALORIES, first, end);
+        return MealsUtil.getFilteredTos(filteredByDate, authUserCaloriesPerDay(), getValue(startTime, LocalTime.MIN), getValue(endTime, LocalTime.MAX));
     }
 
     public Meal create(Meal meal) {
         log.info("create {}", meal);
         checkNew(meal);
-        return service.create(meal);
+        return service.create(meal, authUserId());
     }
 
-    public void delete(int id, int userId) {
-        log.info("delete {}", id);
-        service.delete(id, userId);
+    public void delete(int mealId) {
+        log.info("delete {}", mealId);
+        service.delete(mealId, authUserId());
     }
 
-    public void update(Meal meal, int userId) {
+    public void update(Meal meal, int mealId) {
         log.info("update {} with id={}", meal, meal.getId());
-        service.update(meal, userId);
+        ValidationUtil.assureIdConsistent(meal, mealId);
+        service.update(meal, authUserId());
     }
 
-    public Meal get(int id, int userId) {
-        log.info("get {} with id={}", id);
-        return service.get(id, userId);
+    public Meal get(int mealId) {
+        log.info("get {}", mealId);
+        return service.get(mealId, authUserId());
     }
 }

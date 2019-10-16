@@ -11,17 +11,37 @@ import java.util.List;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFound;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
-public interface UserService {
+@Service
+public class UserService {
 
-    User create(User user);
+    private final UserRepository repository;
 
-    void delete(int id) throws NotFoundException;
+    @Autowired
+    public UserService(UserRepository repository) {
+        this.repository = repository;
+    }
 
-    User get(int id) throws NotFoundException;
+    public User create(User user) {
+        return repository.save(user);
+    }
 
-    User getByEmail(String email) throws NotFoundException;
+    public void delete(int id) throws NotFoundException {
+        checkNotFoundWithId(repository.delete(id), id);
+    }
 
-    List<User> getAll();
+    public User get(int id) throws NotFoundException {
+        return checkNotFoundWithId(repository.get(id), id);
+    }
 
-    void update(User user) throws NotFoundException;
+    public User getByEmail(String email) throws NotFoundException {
+        return checkNotFound(repository.getByEmail(email), "email=" + email);
+    }
+
+    public List<User> getAll() {
+        return repository.getAll();
+    }
+
+    public void update(User user) throws NotFoundException {
+        checkNotFoundWithId(repository.save(user), user.getId());
+    }
 }

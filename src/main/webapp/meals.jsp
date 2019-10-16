@@ -23,7 +23,8 @@
     <h2>Meals</h2>
     <section>
         <h4>Filter</h4>
-        <form method="post" action="meals?action=sorted">
+        <form method="get" action="meals">
+            <input type="hidden" name="action" value="filter">
             <table>
                 <tr>
                     <td>
