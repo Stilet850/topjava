@@ -67,7 +67,6 @@ public class MealServlet extends HttpServlet {
                 String endTime = request.getParameter("endTime");
 
                 log.info("getFiltered");
-                //TODO::
                 request.setAttribute("meals", mealController.filterBy(
                         getValue(startDate, fn -> LocalDate.parse(startDate)),
                         getValue(endDate, fn -> LocalDate.parse(endDate)),
