@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
+import java.util.function.Function;
 
 import static java.lang.Integer.parseInt;
 
@@ -27,14 +28,12 @@ public class MealServlet extends HttpServlet {
 
     private ConfigurableApplicationContext appCtx;
     private MealRestController mealController;
-    private ProfileRestController userController;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
         mealController = appCtx.getBean(MealRestController.class);
-        userController = appCtx.getBean(ProfileRestController.class);
     }
 
     @Override
@@ -70,10 +69,10 @@ public class MealServlet extends HttpServlet {
                 log.info("getFiltered");
                 //TODO::
                 request.setAttribute("meals", mealController.filterBy(
-                        startDate.isEmpty() ? null : LocalDate.parse(startDate),
-                        endDate.isEmpty() ? null : LocalDate.parse(endDate),
-                        startTime.isEmpty() ? null : LocalTime.parse(startTime),
-                        endTime.isEmpty() ? null : LocalTime.parse(endTime)));
+                        getValue(startDate, fn -> LocalDate.parse(startDate)),
+                        getValue(endDate, fn -> LocalDate.parse(endDate)),
+                        getValue(startTime, fn -> LocalTime.parse(startTime)),
+                        getValue(endTime, fn -> LocalTime.parse(endTime))));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             case "delete":
@@ -103,6 +102,10 @@ public class MealServlet extends HttpServlet {
     public void destroy() {
         super.destroy();
         appCtx.close();
+    }
+
+    private <T> T getValue(String value, Function<String, T> fn) {
+        return value != null ? fn.apply(value) : null;
     }
 
     private int getId(HttpServletRequest request) {
