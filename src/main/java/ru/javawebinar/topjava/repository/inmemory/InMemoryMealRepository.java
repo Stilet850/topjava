@@ -9,7 +9,6 @@ import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,7 +49,8 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public boolean delete(int mealId, int userId) {
         log.info("userId {} delete {} ", userId, mealId);
-        return getMapBy(userId).remove(mealId) != null;
+        final Map<Integer, Meal> meals = repository.get(userId);
+        return meals != null && meals.remove(mealId) != null;
     }
 
     @Override
