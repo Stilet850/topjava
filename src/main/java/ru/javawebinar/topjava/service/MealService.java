@@ -9,13 +9,10 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 
-import static java.util.Collections.EMPTY_LIST;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
 public class MealService {
-
-    private static final String meal_does_not_belong_to_the_user = "meal does not belong to the user";
     private final MealRepository repository;
 
     @Autowired
@@ -40,12 +37,10 @@ public class MealService {
     }
 
     public List<Meal> getAllBy(int userId) {
-        List<Meal> list = repository.getAllBy(userId);
-        return list == null ? EMPTY_LIST : list;
+        return repository.getAllBy(userId);
     }
 
     public List<Meal> getAllBy(int userId, LocalDate startDate, LocalDate endDate) {
-        List<Meal> list = repository.getAllBy(userId, startDate, endDate);
-        return list == null ? EMPTY_LIST : list;
+        return repository.getAllBy(userId, startDate, endDate);
     }
 }
