@@ -77,7 +77,7 @@ public class InMemoryMealRepository implements MealRepository {
 
     private Map<Integer, Meal> getMapBy(int userId) {
         log.info("getMapBy userId {} ", userId);
-        return repository.computeIfAbsent(userId, HashMap::new);
+        return repository.computeIfAbsent(userId, ConcurrentHashMap::new);
     }
 }
 
