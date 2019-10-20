@@ -27,6 +27,7 @@ public class JdbcUserRepository implements UserRepository {
     @Autowired
     public JdbcUserRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.insertUser = new SimpleJdbcInsert(jdbcTemplate)
+                .withSchemaName("topjava")
                 .withTableName("users")
                 .usingGeneratedKeyColumns("id");
 
