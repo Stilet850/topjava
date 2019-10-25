@@ -8,6 +8,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class MealTestData {
+    public static final int USER_ID = 100000;
+
     public static final int FIRST_MEAL_ID_OF_FIRST_USER_ID = START_SEQ + 2;
     public static final int SEC_MEAL_ID_OF_FIRST_USER_ID = START_SEQ + 3;
     public static final int THIRD_MEAL_ID_OF_FIRST_USER_ID = START_SEQ + 4;
@@ -29,6 +31,7 @@ public class MealTestData {
 
  public static final Meal[] SORTED_MEAL_OF_SECON_USER = {
             MEAL_3_OF_SECON_USER, MEAL_2_OF_SECON_USER, MEAL_1_OF_SECON_USER};
+    public static final int ADMIN_ID = 100001;
 
 
     public static void assertMatch(Meal actual, Meal expected) {
