@@ -40,6 +40,7 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 public class MealServiceTest {
     private static final Logger logger = LoggerFactory.getLogger(MealServiceTest.class);
     private static final List<String> tests = new ArrayList<>();
+    public static final String ALIGNMENT = "%-20s %6s";
     @Autowired
     private MealService service;
 
@@ -60,7 +61,7 @@ public class MealServiceTest {
 
         @Override
         protected void finished(Description description) {
-            String outPut = format("%-20s %6s", name.getMethodName(), (currentTimeMillis() - startTime) + " ms ");
+            String outPut = format(ALIGNMENT, name.getMethodName(), (currentTimeMillis() - startTime) + " ms ");
             tests.add(outPut);
             logger.info(outPut);
         }
@@ -68,7 +69,7 @@ public class MealServiceTest {
 
     @BeforeClass
     public static void setUpClass() {
-        tests.add(format("%-20s %6s", "\nTest name", "Process time"));
+        tests.add(format(ALIGNMENT, "\nTest name", "Process time"));
     }
 
     @AfterClass
