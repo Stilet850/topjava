@@ -1,10 +1,8 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.Stopwatch;
 import org.junit.rules.TestName;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
@@ -23,10 +21,13 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.stream.Collectors.joining;
+import static org.junit.rules.ExpectedException.none;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
@@ -40,16 +41,38 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 public class MealServiceTest {
     private static final Logger logger = LoggerFactory.getLogger(MealServiceTest.class);
     private static final List<String> tests = new ArrayList<>();
-    public static final String ALIGNMENT = "%-20s %6s";
+    public static final String ALIGNMENT = "%-20s %14s %-20s";
     @Autowired
     private MealService service;
 
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public ExpectedException thrown = none();
 
     @Rule
     public TestName name = new TestName();
 
+    @Rule
+    public Stopwatch stopwatch = new Stopwatch() {
+        @Override
+        protected void succeeded(long nanos, Description description) {
+            logInfo(description, "succeeded", nanos);
+        }
+
+        @Override
+        protected void failed(long nanos, Throwable e, Description description) {
+            logInfo(description, "failed", nanos);
+        }
+    };
+
+    private static void logInfo(Description description, String status, long nanos) {
+        String testName = description.getMethodName();
+        String outPut = format(ALIGNMENT,
+                testName, status, NANOSECONDS.toMillis(nanos));
+        tests.add(outPut);
+        logger.info(outPut);
+    }
+
+/*
     @Rule
     public TestWatcher watcher = new TestWatcher() {
         private long startTime;
@@ -61,15 +84,16 @@ public class MealServiceTest {
 
         @Override
         protected void finished(Description description) {
-            String outPut = format(ALIGNMENT, name.getMethodName(), (currentTimeMillis() - startTime) + " ms ");
+//            String outPut = format(ALIGNMENT, name.getMethodName(), (currentTimeMillis() - startTime) + " ms ");
+            String outPut = format(ALIGNMENT, description, (currentTimeMillis() - startTime) + " ms ");
             tests.add(outPut);
             logger.info(outPut);
         }
-    };
+    }; */
 
     @BeforeClass
     public static void setUpClass() {
-        tests.add(format(ALIGNMENT, "\nTest name", "Process time"));
+        tests.add(format(ALIGNMENT, "\nTest name", "Status" ,"Time (ms)"));
     }
 
     @AfterClass
@@ -116,8 +140,9 @@ public class MealServiceTest {
         service.get(1, USER_ID);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void getNotOwn() throws Exception {
+        thrown.expect(NotFoundException.class);
         service.get(MEAL1_ID, ADMIN_ID);
     }
 

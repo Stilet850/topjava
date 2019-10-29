@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.springframework.dao.support.DataAccessUtils.singleResult;
 import static ru.javawebinar.topjava.model.Meal.*;
 
 @Repository
@@ -45,23 +46,31 @@ public class JpaMealRepository implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        return DataAccessUtils.singleResult(
+       final Meal meal = em.find(Meal.class, id);
+       if (meal != null && userId == meal.getUser().getId()){
+           return meal;
+       }
+
+       return null;
+/*
+        return singleResult(
                 em.createNamedQuery(GET, Meal.class)
                         .setParameter("id", id)
                         .setParameter("userId", userId)
                         .getResultList());
+*/
     }
 
     @Override
     public List<Meal> getAll(int userId) {
-        return em.createNamedQuery(GET_ALL)
+        return em.createNamedQuery(GET_ALL, Meal.class)
                 .setParameter("userId", userId)
                 .getResultList();
     }
 
     @Override
     public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
-        return em.createNamedQuery(GET_BETWEEN)
+        return em.createNamedQuery(GET_BETWEEN, Meal.class)
                 .setParameter("userId", userId)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
