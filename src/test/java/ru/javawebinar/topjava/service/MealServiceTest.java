@@ -41,7 +41,7 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 public class MealServiceTest {
     private static final Logger logger = LoggerFactory.getLogger(MealServiceTest.class);
     private static final List<String> tests = new ArrayList<>();
-    public static final String ALIGNMENT = "%-20s %14s %-20s";
+    public static final String ALIGNMENT = "%-20s %-4s";
     @Autowired
     private MealService service;
 
@@ -49,51 +49,18 @@ public class MealServiceTest {
     public ExpectedException thrown = none();
 
     @Rule
-    public TestName name = new TestName();
-
-    @Rule
     public Stopwatch stopwatch = new Stopwatch() {
         @Override
-        protected void succeeded(long nanos, Description description) {
-            logInfo(description, "succeeded", nanos);
-        }
-
-        @Override
-        protected void failed(long nanos, Throwable e, Description description) {
-            logInfo(description, "failed", nanos);
-        }
-    };
-
-    private static void logInfo(Description description, String status, long nanos) {
-        String testName = description.getMethodName();
-        String outPut = format(ALIGNMENT,
-                testName, status, NANOSECONDS.toMillis(nanos));
-        tests.add(outPut);
-        logger.info(outPut);
-    }
-
-/*
-    @Rule
-    public TestWatcher watcher = new TestWatcher() {
-        private long startTime;
-
-        @Override
-        protected void starting(Description description) {
-            startTime = currentTimeMillis();
-        }
-
-        @Override
-        protected void finished(Description description) {
-//            String outPut = format(ALIGNMENT, name.getMethodName(), (currentTimeMillis() - startTime) + " ms ");
-            String outPut = format(ALIGNMENT, description, (currentTimeMillis() - startTime) + " ms ");
+        protected void finished(long nanos, Description description) {
+            String outPut = format(ALIGNMENT, description.getMethodName(), NANOSECONDS.toMillis(nanos));
             tests.add(outPut);
             logger.info(outPut);
         }
-    }; */
+    };
 
     @BeforeClass
     public static void setUpClass() {
-        tests.add(format(ALIGNMENT, "\nTest name", "Status" ,"Time (ms)"));
+        tests.add(format(ALIGNMENT, "\nTest name", "Time (ms)"));
     }
 
     @AfterClass
