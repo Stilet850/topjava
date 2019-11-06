@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ru.javawebinar.topjava.model.Meal;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
@@ -12,7 +13,7 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
 
     Meal getByIdAndUserId(int id, int userId);
 
-    List<Meal> getAllByUserId(int userId);
+    List<Meal> getAllByUserId(int userId, Sort sort);
 
-    List<Meal> findByDateTimeBetweenAndUserId(LocalDate startDate, LocalDate endDate, int userId, Sort sortByDateTime);
+    List<Meal> findByDateTimeBetweenAndUserId(LocalDateTime startDate, LocalDateTime endDate, int userId, Sort sortByDateTime);
 }
