@@ -8,6 +8,7 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.DateTimeUtil;
 
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -27,6 +28,7 @@ public class DataJpaMealRepository implements MealRepository {
     private CrudUserRepository users;
 
     @Override
+    @Transactional
     public Meal save(Meal meal, int userId) {
         if (!meal.isNew() && get(meal.getId(), userId) == null) {
             return null;
@@ -54,6 +56,6 @@ public class DataJpaMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getBetweenInclusive(LocalDate startDate, LocalDate endDate, int userId) {
-        return meals.findByDateTimeGreaterThanEqualAndDateTimeLessThanAndUserId(getStartInclusive(startDate), getEndExclusive(endDate), userId, SORT_BY_DATE_TIME);
+        return meals.findByDateAndUserId(getStartInclusive(startDate), getEndExclusive(endDate), userId);
     }
 }

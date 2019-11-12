@@ -30,8 +30,6 @@ public abstract class AbstractServiceTest {
     private static final Logger log = getLogger("result");
     private static StringBuilder results = new StringBuilder();
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
-    @Rule
     // http://stackoverflow.com/questions/14892125/what-is-the-best-practice-to-determine-the-execution-time-of-the-bussiness-relev
     public Stopwatch stopwatch = new Stopwatch() {
         @Override

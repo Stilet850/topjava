@@ -23,7 +23,6 @@ import java.util.List;
 import static ru.javawebinar.topjava.util.DateTimeUtil.getEndExclusive;
 import static ru.javawebinar.topjava.util.DateTimeUtil.getStartInclusive;
 
-@Repository
 public abstract class JdbcMealRepository<T> implements MealRepository {
 
     private static final RowMapper<Meal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
