@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.service;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,6 +18,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
+import static java.time.LocalDateTime.of;
 
 public abstract class AbstractMealServiceTest extends AbstractServiceTest {
     private static final Logger log = getLogger("result");
